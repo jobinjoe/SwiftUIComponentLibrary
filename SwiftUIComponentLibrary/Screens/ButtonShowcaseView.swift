@@ -43,6 +43,15 @@ struct ButtonShowcaseView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 12) {
+                    Text("Destructive")
+                        .font(.headline)
+
+                    AppButton(title: "Delete", style: .destructive) {
+                        print("Delete tapped")
+                    }
+                }
+
+                VStack(alignment: .leading, spacing: 12) {
                     Text("Disabled")
                         .font(.headline)
 

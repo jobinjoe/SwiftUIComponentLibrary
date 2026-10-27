@@ -11,6 +11,7 @@ enum AppButtonStyle {
     case primary
     case secondary
     case outlined
+    case destructive
 }
 
 struct AppButton: View {
@@ -27,12 +28,14 @@ struct AppButton: View {
             return .gray.opacity(0.15)
         case .outlined:
             return .clear
+        case .destructive:
+            return .red
         }
     }
 
     private var foregroundColor: Color {
         switch style {
-        case .primary:
+        case .primary, .destructive:
             return .white
         case .secondary:
             return .primary

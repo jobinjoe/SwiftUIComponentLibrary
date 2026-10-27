@@ -33,34 +33,30 @@ struct SheetShowcaseView: View {
         .padding()
         .navigationTitle("Sheet Library")
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $isConfirmationPresented) {
-            AppSheet(
-                title: "Delete Item?",
-                message: "This action cannot be undone.",
-                confirmTitle: "Delete",
-                cancelTitle: "Cancel",
-                onConfirm: {
-                    resultMessage = "Delete confirmed."
-                },
-                onCancel: {
-                    resultMessage = "Deletion cancelled."
-                }
-            )
-            .presentationDetents([.medium])
-            .presentationDragIndicator(.visible)
-        }
-        .sheet(isPresented: $isInfoPresented) {
-            AppSheet(
-                title: "All Done!",
-                message: "Your information has been saved.",
-                confirmTitle: "Got It",
-                onConfirm: {
-                    resultMessage = "Information acknowledged."
-                }
-            )
-            .presentationDetents([.medium])
-            .presentationDragIndicator(.visible)
-        }
+        .appSheet(
+            isPresented: $isConfirmationPresented,
+            title: "Delete Item?",
+            message: "This action cannot be undone.",
+            style: .destructive,
+            confirmTitle: "Delete",
+            cancelTitle: "Cancel",
+            onConfirm: {
+                resultMessage = "Delete confirmed."
+            },
+            onCancel: {
+                resultMessage = "Deletion cancelled."
+            }
+        )
+        .appSheet(
+            isPresented: $isInfoPresented,
+            title: "All Done!",
+            message: "Your information has been saved.",
+            style: .info,
+            confirmTitle: "Got It",
+            onConfirm: {
+                resultMessage = "Information acknowledged."
+            }
+        )
     }
 }
 

@@ -42,8 +42,7 @@ struct ContentView: View {
                 }
 
                 NavigationLink {
-                    Text("Form Input Showcase — Coming Soon")
-                        .navigationTitle("Form Input Library")
+                    FormInputShowcaseView()
                 } label: {
                     homeButton(title: "Form Input Component")
                 }

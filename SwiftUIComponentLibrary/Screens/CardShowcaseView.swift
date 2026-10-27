@@ -17,24 +17,26 @@ struct CardShowcaseView: View {
                     .fontWeight(.bold)
 
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("1. Basic Card")
+                    Text("1. Standard")
                         .font(.headline)
 
                     AppCard(
                         title: "Welcome",
                         description: "Explore our application and its features.",
-                        systemImage: "hand.wave"
+                        systemImage: "hand.wave",
+                        style: .standard
                     )
                 }
 
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("2. Card with Action")
+                    Text("2. Highlighted")
                         .font(.headline)
 
                     AppCard(
                         title: "Your Profile",
                         description: "View and update your profile details.",
                         systemImage: "person.crop.circle",
+                        style: .highlighted,
                         actionTitle: "View Profile"
                     ) {
                         print("View Profile tapped")
@@ -42,12 +44,13 @@ struct CardShowcaseView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("3. Text-Only Card")
+                    Text("3. Outlined")
                         .font(.headline)
 
                     AppCard(
                         title: "Notifications",
-                        description: "You are all caught up. No new notifications."
+                        description: "You are all caught up. No new notifications.",
+                        style: .outlined
                     )
                 }
             }

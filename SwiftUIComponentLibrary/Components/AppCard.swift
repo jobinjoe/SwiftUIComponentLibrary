@@ -7,19 +7,55 @@
 
 import SwiftUI
 
+enum AppCardStyle {
+    case standard
+    case outlined
+    case highlighted
+}
+
 struct AppCard: View {
     let title: String
     let description: String
     var systemImage: String? = nil
+    var style: AppCardStyle = .standard
     var actionTitle: String? = nil
     var action: (() -> Void)? = nil
+
+    private var backgroundColor: Color {
+        switch style {
+        case .standard:
+            return Color(uiColor: .secondarySystemBackground)
+        case .outlined:
+            return .clear
+        case .highlighted:
+            return Color.blue.opacity(0.12)
+        }
+    }
+
+    private var borderColor: Color {
+        switch style {
+        case .standard:
+            return Color.gray.opacity(0.2)
+        case .outlined, .highlighted:
+            return .blue
+        }
+    }
+
+    private var iconColor: Color {
+        switch style {
+        case .standard:
+            return .secondary
+        case .outlined, .highlighted:
+            return .blue
+        }
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             if let systemImage {
                 Image(systemName: systemImage)
                     .font(.system(size: 28))
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(iconColor)
             }
 
             Text(title)
@@ -39,11 +75,11 @@ struct AppCard: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
-        .background(Color(uiColor: .secondarySystemBackground))
+        .background(backgroundColor)
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .overlay {
             RoundedRectangle(cornerRadius: 16)
-                .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                .stroke(borderColor, lineWidth: style == .outlined ? 1.5 : 1)
         }
     }
 }
@@ -53,13 +89,15 @@ struct AppCard: View {
         AppCard(
             title: "Welcome",
             description: "This is a simple reusable card.",
-            systemImage: "hand.wave"
+            systemImage: "hand.wave",
+            style: .standard
         )
 
         AppCard(
             title: "Your Profile",
             description: "View and update your profile details.",
             systemImage: "person.crop.circle",
+            style: .highlighted,
             actionTitle: "View Profile"
         ) {
             print("View Profile tapped")

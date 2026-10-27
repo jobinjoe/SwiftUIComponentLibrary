@@ -5,8 +5,8 @@ A reusable UI component library built with SwiftUI. This project demonstrates ho
 ## Features
 
 - Reusable buttons with multiple styles and disabled states
-- Configurable cards with optional icons and action buttons
-- Reusable modal sheets with confirmation and cancellation actions
+- Configurable cards with standard, outlined, and highlighted styles
+- Reusable modal sheets with info, confirmation, and destructive styles
 - Text inputs with secure-entry support and validation messages
 - Showcase screens for each component
 - A demo application combining all four components
@@ -22,31 +22,33 @@ A reusable UI component library built with SwiftUI. This project demonstrates ho
 
 ```text
 SwiftUIComponentLibrary/
-├── SwiftUIComponentLibraryApp.swift
-├── ContentView.swift
-├── Components/
-│   ├── AppButton.swift
-│   ├── AppCard.swift
-│   ├── AppSheet.swift
-│   └── AppTextField.swift
-├── Screens/
-│   ├── ButtonShowcaseView.swift
-│   ├── CardShowcaseView.swift
-│   ├── SheetShowcaseView.swift
-│   ├── FormInputShowcaseView.swift
-│   └── DemoApplicationView.swift
-└── README.md
+├── README.md
+├── SwiftUIComponentLibrary.xcodeproj
+└── SwiftUIComponentLibrary/
+    ├── SwiftUIComponentLibraryApp.swift
+    ├── ContentView.swift
+    ├── Components/
+    │   ├── AppButton.swift
+    │   ├── AppCard.swift
+    │   ├── AppSheet.swift
+    │   └── AppTextField.swift
+    └── Screens/
+        ├── ButtonShowcaseView.swift
+        ├── CardShowcaseView.swift
+        ├── SheetShowcaseView.swift
+        ├── FormInputShowcaseView.swift
+        └── DemoApplicationView.swift
 ```
 
 ## Components
 
 ### 1. AppButton
 
-A configurable button component supporting primary, secondary, and outlined styles, along with a disabled state.
+A configurable button component supporting primary, secondary, outlined, and destructive styles, along with a disabled state.
 
 **Parameters**
 - `title`: Text displayed on the button.
-- `style`: Button style; defaults to `.primary`.
+- `style`: Button style; `.primary`, `.secondary`, `.outlined`, or `.destructive`. Defaults to `.primary`.
 - `isDisabled`: Controls whether the button is interactive; defaults to `false`.
 - `action`: Closure executed when the button is tapped.
 
@@ -60,12 +62,13 @@ AppButton(title: "Continue", style: .primary) {
 
 ### 2. AppCard
 
-A reusable card displaying a title, description, optional SF Symbol, and optional action button.
+A reusable card displaying a title, description, optional SF Symbol, and optional action button. `style` changes the fill and border.
 
 **Parameters**
 - `title`: Card heading.
 - `description`: Supporting text.
 - `systemImage`: Optional SF Symbol name.
+- `style`: Card style; `.standard`, `.outlined`, or `.highlighted`. Defaults to `.standard`.
 - `actionTitle`: Optional action-button label.
 - `action`: Optional action closure.
 
@@ -76,6 +79,7 @@ AppCard(
     title: "Your Profile",
     description: "View your profile details.",
     systemImage: "person.crop.circle",
+    style: .highlighted,
     actionTitle: "View Profile"
 ) {
     print("View Profile tapped")
@@ -84,11 +88,13 @@ AppCard(
 
 ### 3. AppSheet
 
-Reusable modal content with a title, message, confirmation action, and optional cancellation action. The presenting screen controls when the sheet appears.
+Reusable modal with a title, message, confirmation action, and optional cancellation action. Call `appSheet` on the presenting view. It owns the sheet presentation, medium detent, and drag indicator. `style` changes the icon and confirm button.
 
 **Parameters**
+- `isPresented`: Binding that controls whether the sheet is visible.
 - `title`: Sheet heading.
 - `message`: Supporting message.
+- `style`: Sheet style; `.info`, `.confirmation`, or `.destructive`. Defaults to `.confirmation`.
 - `confirmTitle`: Confirmation-button label; defaults to `"OK"`.
 - `cancelTitle`: Optional cancellation-button label.
 - `onConfirm`: Closure executed when confirmed.
@@ -97,21 +103,20 @@ Reusable modal content with a title, message, confirmation action, and optional 
 **Example**
 
 ```swift
-.sheet(isPresented: $isPresented) {
-    AppSheet(
-        title: "Confirm Action",
-        message: "Are you sure you want to continue?",
-        confirmTitle: "Continue",
-        cancelTitle: "Cancel",
-        onConfirm: {
-            print("Confirmed")
-        },
-        onCancel: {
-            print("Cancelled")
-        }
-    )
-    .presentationDetents([.medium])
-}
+.appSheet(
+    isPresented: $isPresented,
+    title: "Confirm Action",
+    message: "Are you sure you want to continue?",
+    style: .confirmation,
+    confirmTitle: "Continue",
+    cancelTitle: "Cancel",
+    onConfirm: {
+        print("Confirmed")
+    },
+    onCancel: {
+        print("Cancelled")
+    }
+)
 ```
 
 ### 4. AppTextField

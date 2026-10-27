@@ -8,9 +8,16 @@
 
 import SwiftUI
 
+enum AppSheetStyle {
+    case info
+    case confirmation
+    case destructive
+}
+
 struct AppSheet: View {
     let title: String
     let message: String
+    var style: AppSheetStyle = .confirmation
     var confirmTitle: String = "OK"
     var cancelTitle: String? = nil
     let onConfirm: () -> Void
@@ -18,11 +25,26 @@ struct AppSheet: View {
 
     @Environment(\.dismiss) private var dismiss
 
+    private var iconName: String {
+        switch style {
+        case .info:
+            return "info.circle.fill"
+        case .confirmation:
+            return "checkmark.circle.fill"
+        case .destructive:
+            return "trash.fill"
+        }
+    }
+
+    private var confirmButtonStyle: AppButtonStyle {
+        style == .destructive ? .destructive : .primary
+    }
+
     var body: some View {
         VStack(spacing: 20) {
-            Image(systemName: "rectangle.portrait.bottomhalf.filled")
+            Image(systemName: iconName)
                 .font(.system(size: 40))
-                .foregroundStyle(.blue)
+                .foregroundStyle(style == .destructive ? .red : .blue)
 
             Text(title)
                 .font(.title2)
@@ -34,7 +56,7 @@ struct AppSheet: View {
                 .multilineTextAlignment(.center)
 
             VStack(spacing: 12) {
-                AppButton(title: confirmTitle) {
+                AppButton(title: confirmTitle, style: confirmButtonStyle) {
                     onConfirm()
                     dismiss()
                 }
@@ -55,10 +77,38 @@ struct AppSheet: View {
     }
 }
 
+extension View {
+    func appSheet(
+        isPresented: Binding<Bool>,
+        title: String,
+        message: String,
+        style: AppSheetStyle = .confirmation,
+        confirmTitle: String = "OK",
+        cancelTitle: String? = nil,
+        onConfirm: @escaping () -> Void,
+        onCancel: (() -> Void)? = nil
+    ) -> some View {
+        sheet(isPresented: isPresented) {
+            AppSheet(
+                title: title,
+                message: message,
+                style: style,
+                confirmTitle: confirmTitle,
+                cancelTitle: cancelTitle,
+                onConfirm: onConfirm,
+                onCancel: onCancel
+            )
+            .presentationDetents([.medium])
+            .presentationDragIndicator(.visible)
+        }
+    }
+}
+
 #Preview {
     AppSheet(
         title: "Confirm Action",
         message: "Are you sure you want to continue?",
+        style: .confirmation,
         confirmTitle: "Continue",
         cancelTitle: "Cancel",
         onConfirm: {

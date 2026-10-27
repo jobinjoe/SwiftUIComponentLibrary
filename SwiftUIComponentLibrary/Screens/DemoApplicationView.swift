@@ -100,22 +100,20 @@ struct DemoApplicationView: View {
         }
         .navigationTitle("Demo Application")
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $isConfirmationPresented) {
-            AppSheet(
-                title: "Confirm Submission",
-                message: "Submit the details for \(name)?",
-                confirmTitle: "Confirm",
-                cancelTitle: "Go Back",
-                onConfirm: {
-                    isSubmitted = true
-                },
-                onCancel: {
-                    isSubmitted = false
-                }
-            )
-            .presentationDetents([.medium])
-            .presentationDragIndicator(.visible)
-        }
+        .appSheet(
+            isPresented: $isConfirmationPresented,
+            title: "Confirm Submission",
+            message: "Submit the details for \(name)?",
+            style: .confirmation,
+            confirmTitle: "Confirm",
+            cancelTitle: "Go Back",
+            onConfirm: {
+                isSubmitted = true
+            },
+            onCancel: {
+                isSubmitted = false
+            }
+        )
     }
 }
 
