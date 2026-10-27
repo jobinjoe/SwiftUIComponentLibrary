@@ -170,6 +170,10 @@ AppTextField(
 4. Build and run the application.
 5. Explore the individual component showcases and the demo application.
 
+## Screen Recording
+
+[Watch the demo walkthrough](https://thinkpalm-my.sharepoint.com/personal/jobin_p_thinkpalm_com/_layouts/15/stream.aspx?id=%2Fpersonal%2Fjobin%5Fp%5Fthinkpalm%5Fcom%2FDocuments%2FAttachments%2FScreen%20Recording%202026%2D10%2D27%20at%206%2E10%2E14%E2%80%AFPM%2Emov&ct=1793105987422&or=OWA%2DNT%2DMail&cid=58b59a80%2D105b%2D2138%2D6551%2Dea733b8ead8a&ga=1&referrer=StreamWebApp%2EWeb&referrerScenario=AddressBarCopied%2Eview%2Ef52153b7%2D2e1f%2D4926%2D8080%2Db7ff3c152fb1)
+
 ## Learning Outcomes
 
 This project demonstrates reusable SwiftUI views, property-driven configuration, closures, `@State`, `@Binding`, environment-based dismissal, modal presentation, and basic form validation.
