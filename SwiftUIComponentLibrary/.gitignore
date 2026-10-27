@@ -1,0 +1,32 @@
+
+# macOS
+.DS_Store
+
+# Xcode user-specific files
+xcuserdata/
+*.xcuserstate
+*.xccheckout
+*.moved-aside
+*.hmap
+
+# Xcode build output
+build/
+DerivedData/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# CocoaPods (if used)
+Pods/
+
+# Fastlane (if used)
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+
