@@ -17,6 +17,8 @@ enum AppButtonStyle {
 struct AppButton: View {
     let title: String
     var style: AppButtonStyle = .primary
+    var systemImage: String? = nil
+    var isLoading: Bool = false
     var isDisabled: Bool = false
     let action: () -> Void
 
@@ -46,23 +48,32 @@ struct AppButton: View {
 
     var body: some View {
         Button(action: action) {
-            Text(title)
-                .fontWeight(.semibold)
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(backgroundColor)
-                .foregroundStyle(foregroundColor)
-                .clipShape(
-                    RoundedRectangle(cornerRadius: 12)
-                )
-                .overlay {
-                    if style == .outlined {
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.blue, lineWidth: 1.5)
-                    }
+            HStack(spacing: 8) {
+                if isLoading {
+                    ProgressView()
+                        .tint(foregroundColor)
+                } else if let systemImage {
+                    Image(systemName: systemImage)
                 }
+
+                Text(title)
+            }
+            .fontWeight(.semibold)
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(backgroundColor)
+            .foregroundStyle(foregroundColor)
+            .clipShape(
+                RoundedRectangle(cornerRadius: 12)
+            )
+            .overlay {
+                if style == .outlined {
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.blue, lineWidth: 1.5)
+                }
+            }
         }
-        .disabled(isDisabled)
-        .opacity(isDisabled ? 0.5 : 1.0)
+        .disabled(isDisabled || isLoading)
+        .opacity(isDisabled && !isLoading ? 0.5 : 1.0)
     }
 }

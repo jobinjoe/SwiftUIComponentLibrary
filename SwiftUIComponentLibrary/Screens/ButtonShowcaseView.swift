@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ButtonShowcaseView: View {
+    @State private var isSaving = false
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
@@ -48,6 +50,38 @@ struct ButtonShowcaseView: View {
 
                     AppButton(title: "Delete", style: .destructive) {
                         print("Delete tapped")
+                    }
+                }
+
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("With Icon")
+                        .font(.headline)
+
+                    AppButton(
+                        title: "Save",
+                        style: .primary,
+                        systemImage: "square.and.arrow.down"
+                    ) {
+                        print("Save tapped")
+                    }
+                }
+
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Loading")
+                        .font(.headline)
+
+                    AppButton(
+                        title: "Save",
+                        style: .primary,
+                        systemImage: "square.and.arrow.down",
+                        isLoading: isSaving
+                    ) {
+                        isSaving = true
+
+                        Task {
+                            try? await Task.sleep(for: .seconds(1))
+                            isSaving = false
+                        }
                     }
                 }
 

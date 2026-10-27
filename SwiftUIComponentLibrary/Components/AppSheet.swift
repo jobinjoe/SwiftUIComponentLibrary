@@ -14,7 +14,7 @@ enum AppSheetStyle {
     case destructive
 }
 
-struct AppSheet: View {
+struct AppSheet<Content: View>: View {
     let title: String
     let message: String
     var style: AppSheetStyle = .confirmation
@@ -22,8 +22,29 @@ struct AppSheet: View {
     var cancelTitle: String? = nil
     let onConfirm: () -> Void
     var onCancel: (() -> Void)? = nil
+    private let content: Content
 
     @Environment(\.dismiss) private var dismiss
+
+    init(
+        title: String,
+        message: String,
+        style: AppSheetStyle = .confirmation,
+        confirmTitle: String = "OK",
+        cancelTitle: String? = nil,
+        @ViewBuilder content: () -> Content,
+        onConfirm: @escaping () -> Void,
+        onCancel: (() -> Void)? = nil
+    ) {
+        self.title = title
+        self.message = message
+        self.style = style
+        self.confirmTitle = confirmTitle
+        self.cancelTitle = cancelTitle
+        self.onConfirm = onConfirm
+        self.onCancel = onCancel
+        self.content = content()
+    }
 
     private var iconName: String {
         switch style {
@@ -55,6 +76,8 @@ struct AppSheet: View {
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
 
+            content
+
             VStack(spacing: 12) {
                 AppButton(title: confirmTitle, style: confirmButtonStyle) {
                     onConfirm()
@@ -74,6 +97,29 @@ struct AppSheet: View {
         }
         .padding(24)
         .frame(maxWidth: .infinity)
+    }
+}
+
+extension AppSheet where Content == EmptyView {
+    init(
+        title: String,
+        message: String,
+        style: AppSheetStyle = .confirmation,
+        confirmTitle: String = "OK",
+        cancelTitle: String? = nil,
+        onConfirm: @escaping () -> Void,
+        onCancel: (() -> Void)? = nil
+    ) {
+        self.init(
+            title: title,
+            message: message,
+            style: style,
+            confirmTitle: confirmTitle,
+            cancelTitle: cancelTitle,
+            content: { EmptyView() },
+            onConfirm: onConfirm,
+            onCancel: onCancel
+        )
     }
 }
 
@@ -102,6 +148,33 @@ extension View {
             .presentationDragIndicator(.visible)
         }
     }
+
+    func appSheet<Content: View>(
+        isPresented: Binding<Bool>,
+        title: String,
+        message: String,
+        style: AppSheetStyle = .confirmation,
+        confirmTitle: String = "OK",
+        cancelTitle: String? = nil,
+        onConfirm: @escaping () -> Void,
+        onCancel: (() -> Void)? = nil,
+        @ViewBuilder content: @escaping () -> Content
+    ) -> some View {
+        sheet(isPresented: isPresented) {
+            AppSheet(
+                title: title,
+                message: message,
+                style: style,
+                confirmTitle: confirmTitle,
+                cancelTitle: cancelTitle,
+                content: content,
+                onConfirm: onConfirm,
+                onCancel: onCancel
+            )
+            .presentationDetents([.medium])
+            .presentationDragIndicator(.visible)
+        }
+    }
 }
 
 #Preview {
@@ -119,4 +192,3 @@ extension View {
         }
     )
 }
-

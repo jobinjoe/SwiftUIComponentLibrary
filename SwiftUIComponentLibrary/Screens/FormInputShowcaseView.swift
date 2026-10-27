@@ -12,10 +12,13 @@ struct FormInputShowcaseView: View {
     @State private var email = ""
     @State private var password = ""
     @State private var username = ""
+    @State private var emailEdited = false
+    @State private var passwordEdited = false
+    @State private var usernameEdited = false
     @State private var showErrors = false
 
     private var emailError: String? {
-        guard showErrors else { return nil }
+        guard showErrors || emailEdited else { return nil }
 
         if email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             return "Email is required"
@@ -29,7 +32,7 @@ struct FormInputShowcaseView: View {
     }
 
     private var passwordError: String? {
-        guard showErrors else { return nil }
+        guard showErrors || passwordEdited else { return nil }
 
         return password.count < 8
             ? "Password must contain at least 8 characters"
@@ -37,7 +40,7 @@ struct FormInputShowcaseView: View {
     }
 
     private var usernameError: String? {
-        guard showErrors else { return nil }
+        guard showErrors || usernameEdited else { return nil }
 
         return username.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
             ? "Username is required"
@@ -58,6 +61,9 @@ struct FormInputShowcaseView: View {
                     errorMessage: emailError
                 )
                 .keyboardType(.emailAddress)
+                .onChange(of: email) {
+                    emailEdited = true
+                }
 
                 AppTextField(
                     title: "Password",
@@ -66,6 +72,9 @@ struct FormInputShowcaseView: View {
                     errorMessage: passwordError,
                     isSecure: true
                 )
+                .onChange(of: password) {
+                    passwordEdited = true
+                }
 
                 AppTextField(
                     title: "Username",
@@ -73,6 +82,9 @@ struct FormInputShowcaseView: View {
                     text: $username,
                     errorMessage: usernameError
                 )
+                .onChange(of: username) {
+                    usernameEdited = true
+                }
 
                 AppButton(title: "Validate Form") {
                     showErrors = true

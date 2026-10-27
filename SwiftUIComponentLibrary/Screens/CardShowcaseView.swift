@@ -53,6 +53,21 @@ struct CardShowcaseView: View {
                         style: .outlined
                     )
                 }
+
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("4. Custom Content")
+                        .font(.headline)
+
+                    AppCard(
+                        title: "Storage",
+                        description: "You are using 2 GB of 5 GB.",
+                        systemImage: "internaldrive",
+                        content: {
+                            ProgressView(value: 0.4)
+                                .tint(.blue)
+                        }
+                    )
+                }
             }
             .padding()
         }

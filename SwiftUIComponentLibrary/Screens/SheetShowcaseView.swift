@@ -55,6 +55,12 @@ struct SheetShowcaseView: View {
             confirmTitle: "Got It",
             onConfirm: {
                 resultMessage = "Information acknowledged."
+            },
+            content: {
+                Text("Any extra view can sit inside the sheet.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
             }
         )
     }

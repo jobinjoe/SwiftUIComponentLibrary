@@ -4,10 +4,10 @@ A reusable UI component library built with SwiftUI. This project demonstrates ho
 
 ## Features
 
-- Reusable buttons with multiple styles and disabled states
-- Configurable cards with standard, outlined, and highlighted styles
-- Reusable modal sheets with info, confirmation, and destructive styles
-- Text inputs with secure-entry support and validation messages
+- Reusable buttons with multiple styles, optional icons, a loading state, and a disabled state
+- Configurable cards with standard, outlined, and highlighted styles, plus custom content
+- Reusable modal sheets with info, confirmation, and destructive styles, plus custom content
+- Text inputs with secure-entry support and live validation messages
 - Showcase screens for each component
 - A demo application combining all four components
 
@@ -44,25 +44,31 @@ SwiftUIComponentLibrary/
 
 ### 1. AppButton
 
-A configurable button component supporting primary, secondary, outlined, and destructive styles, along with a disabled state.
+A configurable button component supporting primary, secondary, outlined, and destructive styles, an optional SF Symbol, a loading state, and a disabled state.
 
 **Parameters**
 - `title`: Text displayed on the button.
 - `style`: Button style; `.primary`, `.secondary`, `.outlined`, or `.destructive`. Defaults to `.primary`.
+- `systemImage`: Optional SF Symbol name shown before the title.
+- `isLoading`: Replaces the icon with a spinner and blocks taps; defaults to `false`.
 - `isDisabled`: Controls whether the button is interactive; defaults to `false`.
 - `action`: Closure executed when the button is tapped.
 
 **Example**
 
 ```swift
-AppButton(title: "Continue", style: .primary) {
-    print("Continue tapped")
+AppButton(
+    title: "Save",
+    style: .primary,
+    systemImage: "square.and.arrow.down"
+) {
+    print("Save tapped")
 }
 ```
 
 ### 2. AppCard
 
-A reusable card displaying a title, description, optional SF Symbol, and optional action button. `style` changes the fill and border.
+A reusable card displaying a title, description, optional SF Symbol, optional custom content, and an optional action button. `style` changes the fill and border.
 
 **Parameters**
 - `title`: Card heading.
@@ -70,6 +76,7 @@ A reusable card displaying a title, description, optional SF Symbol, and optiona
 - `systemImage`: Optional SF Symbol name.
 - `style`: Card style; `.standard`, `.outlined`, or `.highlighted`. Defaults to `.standard`.
 - `actionTitle`: Optional action-button label.
+- `content`: Optional view built with `@ViewBuilder` and placed under the description.
 - `action`: Optional action closure.
 
 **Example**
@@ -84,6 +91,15 @@ AppCard(
 ) {
     print("View Profile tapped")
 }
+
+AppCard(
+    title: "Storage",
+    description: "You are using 2 GB of 5 GB.",
+    systemImage: "internaldrive",
+    content: {
+        ProgressView(value: 0.4)
+    }
+)
 ```
 
 ### 3. AppSheet
@@ -99,6 +115,7 @@ Reusable modal with a title, message, confirmation action, and optional cancella
 - `cancelTitle`: Optional cancellation-button label.
 - `onConfirm`: Closure executed when confirmed.
 - `onCancel`: Optional cancellation closure.
+- `content`: Optional view built with `@ViewBuilder` and placed between the message and the buttons.
 
 **Example**
 
@@ -115,6 +132,9 @@ Reusable modal with a title, message, confirmation action, and optional cancella
     },
     onCancel: {
         print("Cancelled")
+    },
+    content: {
+        Text("Any extra view can sit inside the sheet.")
     }
 )
 ```

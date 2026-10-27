@@ -11,12 +11,31 @@ import SwiftUI
 struct DemoApplicationView: View {
     @State private var name = ""
     @State private var email = ""
+    @State private var nameEdited = false
+    @State private var emailEdited = false
     @State private var showErrors = false
+    @State private var isSubmitting = false
     @State private var isConfirmationPresented = false
     @State private var isSubmitted = false
 
+    init(
+        name: String = "",
+        email: String = "",
+        showErrors: Bool = false,
+        isSubmitting: Bool = false,
+        isConfirmationPresented: Bool = false,
+        isSubmitted: Bool = false
+    ) {
+        _name = State(initialValue: name)
+        _email = State(initialValue: email)
+        _showErrors = State(initialValue: showErrors)
+        _isSubmitting = State(initialValue: isSubmitting)
+        _isConfirmationPresented = State(initialValue: isConfirmationPresented)
+        _isSubmitted = State(initialValue: isSubmitted)
+    }
+
     private var nameError: String? {
-        guard showErrors else { return nil }
+        guard showErrors || nameEdited else { return nil }
 
         return name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
             ? "Name is required"
@@ -24,7 +43,7 @@ struct DemoApplicationView: View {
     }
 
     private var emailError: String? {
-        guard showErrors else { return nil }
+        guard showErrors || emailEdited else { return nil }
 
         if email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             return "Email is required"
@@ -66,6 +85,9 @@ struct DemoApplicationView: View {
                         text: $name,
                         errorMessage: nameError
                     )
+                    .onChange(of: name) {
+                        nameEdited = true
+                    }
 
                     AppTextField(
                         title: "Email Address",
@@ -74,19 +96,35 @@ struct DemoApplicationView: View {
                         errorMessage: emailError
                     )
                     .keyboardType(.emailAddress)
+                    .onChange(of: email) {
+                        emailEdited = true
+                    }
 
-                    AppButton(title: "Submit Details") {
+                    AppButton(
+                        title: "Submit Details",
+                        systemImage: "paperplane.fill",
+                        isLoading: isSubmitting
+                    ) {
                         showErrors = true
 
-                        if nameError == nil && emailError == nil {
+                        guard nameError == nil, emailError == nil else { return }
+
+                        isSubmitting = true
+
+                        Task {
+                            try? await Task.sleep(for: .seconds(1))
+                            isSubmitting = false
                             isConfirmationPresented = true
                         }
                     }
 
                     if isSubmitted {
-                        Text("Your sample profile was submitted successfully!")
-                            .font(.subheadline)
-                            .foregroundStyle(.green)
+                        AppCard(
+                            title: "Profile submitted",
+                            description: "\(name) · \(email)",
+                            systemImage: "checkmark.circle.fill",
+                            style: .highlighted
+                        )
                     }
                 }
 
@@ -112,14 +150,59 @@ struct DemoApplicationView: View {
             },
             onCancel: {
                 isSubmitted = false
+            },
+            content: {
+                Text(email)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
             }
         )
     }
 }
 
-#Preview {
+#Preview("Ready") {
     NavigationStack {
         DemoApplicationView()
+    }
+}
+
+#Preview("Validation") {
+    NavigationStack {
+        DemoApplicationView(
+            name: " ",
+            email: "jobin",
+            showErrors: true
+        )
+    }
+}
+
+#Preview("Loading") {
+    NavigationStack {
+        DemoApplicationView(
+            name: "Jobin P L",
+            email: "jobin@example.com",
+            isSubmitting: true
+        )
+    }
+}
+
+#Preview("Confirmation") {
+    NavigationStack {
+        DemoApplicationView(
+            name: "Jobin P L",
+            email: "jobin@example.com",
+            isConfirmationPresented: true
+        )
+    }
+}
+
+#Preview("Submitted") {
+    NavigationStack {
+        DemoApplicationView(
+            name: "Jobin P L",
+            email: "jobin@example.com",
+            isSubmitted: true
+        )
     }
 }
 
